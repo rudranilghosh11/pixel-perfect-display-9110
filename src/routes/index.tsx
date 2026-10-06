@@ -306,7 +306,7 @@ function Index() {
       <Section id="team" eyebrow="09 · Team" title="Team NLP-44">
         <p className="-mt-6 mb-8 text-muted-foreground">Team NLP-44, BBA(AI), Natural Language Processing CA3</p>
         <div className="grid gap-6 md:grid-cols-3">
-          {[["Aarav Seth", "Team Leader · data, model, repo"], ["Aryan Bakshi", "Audit, explainability, error analysis"], ["Rudranil Ghosh", "App, pitch, report"]].map(([n, r]) => (
+          {([["Aarav Seth", "Team Leader · data, model, repo"], ["Aryan Bakshi", "Audit, explainability, error analysis"], ["Rudranil Ghosh", "App, pitch, report"]] as const).map(([n, r]) => (
             <div key={n} className="rounded-xl border bg-card p-6 text-center shadow-sm">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-navy font-serif text-xl font-bold text-navy-foreground">{n.split(" ").map((x) => x[0]).join("")}</div>
               <h3 className="mt-4 text-lg font-semibold text-navy">{n}</h3>
@@ -318,13 +318,13 @@ function Index() {
 
       <Section id="refs" eyebrow="10 · References" title="Data and links" alt>
         <ul className="space-y-3 text-sm">
-          {[
+          {([
             ["CUAD v1 — The Atticus Project (Hendrycks et al. 2021, CC BY 4.0)", "https://www.atticusprojectai.org/cuad"],
             ["CUAD paper (arXiv:2103.06268)", "https://arxiv.org/abs/2103.06268"],
             ["CUAD on GitHub", "https://github.com/TheAtticusProject/cuad"],
             ["CUAD on Hugging Face", "https://huggingface.co/datasets/theatticusproject/cuad"],
             ["ContractGuard project repo", REPO],
-          ].map(([l, h]) => (
+          ] as const).map(([l, h]) => (
             <li key={h} className="rounded-lg bg-card p-4 shadow-sm">
               <p className="font-medium text-navy">{l}</p>
               <Ext href={h} className="break-all text-teal hover:underline">{h}</Ext>
