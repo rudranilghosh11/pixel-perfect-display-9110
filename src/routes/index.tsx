@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import shieldAsset from "@/assets/contractguard-shield.png.asset.json";
 import { useState, type ReactNode } from "react";
 import {
   Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,
