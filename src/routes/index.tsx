@@ -176,11 +176,15 @@ function Demo() {
 }
 
 function Wordmark({ size }: { size: "nav" | "hero" }) {
-  const cls = size === "nav" ? "font-serif text-lg font-bold" : "font-serif font-bold";
+  const textCls = size === "nav" ? "font-serif text-lg font-bold" : "font-serif font-bold";
+  const markCls = size === "nav" ? "h-8 w-8 rounded-md" : "h-16 w-16 rounded-xl md:h-24 md:w-24";
   return (
-    <span className={cls}>
-      <span className="text-navy-foreground">Contract</span>
-      <span className="text-teal">Guard</span>
+    <span className="inline-flex items-center gap-2 md:gap-4">
+      <img src={shieldAsset.url} alt="ContractGuard shield logo" className={markCls} />
+      <span className={textCls}>
+        <span className="text-navy-foreground">Contract</span>
+        <span className="text-teal">Guard</span>
+      </span>
     </span>
   );
 }
