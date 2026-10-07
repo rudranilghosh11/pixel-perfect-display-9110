@@ -30,21 +30,21 @@ const NAV = [
   ["team", "Team"], ["refs", "References"],
 ] as const;
 
-const C = { navy: "var(--navy)", teal: "var(--teal)", med: "var(--risk-med)" };
+const C = { c1: "var(--chart-1)", c2: "var(--chart-2)", c3: "var(--chart-3)" };
 
 function Ext({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
   return <a href={href} target="_blank" rel="noopener noreferrer" className={className}>{children}</a>;
 }
 
-const btnPrimary = "inline-flex items-center rounded-md bg-teal px-5 py-3 text-sm font-semibold text-navy-foreground transition hover:opacity-90";
-const btnGhost = "inline-flex items-center rounded-md border border-navy-foreground/40 px-5 py-3 text-sm font-semibold text-navy-foreground transition hover:bg-navy-foreground/10";
+const btnPrimary = "inline-flex items-center rounded-md bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground transition hover:bg-brand/85";
+const btnGhost = "inline-flex items-center rounded-md border border-navy-foreground/35 px-5 py-3 text-sm font-semibold text-navy-foreground transition hover:bg-navy-foreground/10";
 
 function Section({ id, eyebrow, title, children, alt }: { id: string; eyebrow: string; title: string; children: ReactNode; alt?: boolean }) {
   return (
-    <section id={id} className={alt ? "bg-secondary/60" : ""}>
+    <section id={id} className={alt ? "bg-secondary/40" : ""}>
       <div className="mx-auto max-w-6xl px-6 py-20">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal">{eyebrow}</p>
-        <h2 className="mt-2 text-3xl font-bold text-navy md:text-4xl">{title}</h2>
+        <h2 className="mt-2 text-3xl font-bold text-ink md:text-4xl">{title}</h2>
         <div className="mt-10">{children}</div>
       </div>
     </section>
@@ -54,20 +54,20 @@ function Section({ id, eyebrow, title, children, alt }: { id: string; eyebrow: s
 function Card({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="rounded-xl border bg-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-navy">{title}</h3>
+      <h3 className="text-lg font-semibold text-ink">{title}</h3>
       <div className="mt-2 text-sm leading-relaxed text-muted-foreground">{children}</div>
     </div>
   );
 }
 
 function Note({ children }: { children: ReactNode }) {
-  return <div className="rounded-lg border-l-4 border-teal bg-teal-soft p-4 text-sm text-navy">{children}</div>;
+  return <div className="rounded-lg border-l-4 border-teal bg-teal-soft p-4 text-sm text-ink">{children}</div>;
 }
 
 const tierStyle: Record<string, string> = {
   High: "bg-risk-high text-navy-foreground",
   Medium: "bg-risk-med text-navy",
-  Low: "bg-risk-low text-navy-foreground",
+  Low: "bg-brand text-brand-foreground",
 };
 function Tier({ t }: { t: "High" | "Medium" | "Low" }) {
   return <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${tierStyle[t]}`}>{t === "Low" ? "Low (protective)" : t}</span>;
@@ -96,18 +96,25 @@ const coefs: { cls: string; data: { term: string; w: number }[] }[] = [
   { cls: "Uncapped Liability", data: [{ term: "liability", w: 5.9 }, { term: "except", w: 4.5 }, { term: "damages", w: 4.2 }] },
 ];
 
+const axisTick = { fontSize: 11, fill: "var(--muted-foreground)" };
+const tooltipStyle = {
+  contentStyle: { background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12, color: "var(--popover-foreground)" },
+  labelStyle: { color: "var(--popover-foreground)", fontWeight: 600 },
+  itemStyle: { color: "var(--popover-foreground)" },
+};
+
 function ChartBox({ title, data, keys, height = 300 }: { title: string; data: object[]; keys: string[]; height?: number }) {
-  const colors = [C.navy, C.teal, C.med];
+  const colors = [C.c1, C.c2, C.c3];
   return (
     <div className="rounded-xl border bg-card p-5 shadow-sm">
-      <h3 className="mb-4 text-base font-semibold text-navy">{title}</h3>
+      <h3 className="mb-4 text-base font-semibold text-ink">{title}</h3>
       <ResponsiveContainer width="100%" height={height}>
         <BarChart data={data} margin={{ left: -10 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} />
-          <YAxis domain={[0, 1]} tick={{ fontSize: 11 }} />
-          <Tooltip />
-          <Legend wrapperStyle={{ fontSize: 12 }} />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+          <XAxis dataKey="name" tick={axisTick} interval={0} stroke="var(--border)" tickLine={false} />
+          <YAxis domain={[0, 1]} tick={axisTick} stroke="var(--border)" tickLine={false} axisLine={false} />
+          <Tooltip {...tooltipStyle} cursor={{ fill: "var(--teal-soft)" }} />
+          <Legend wrapperStyle={{ fontSize: 12, color: "var(--muted-foreground)" }} />
           {keys.map((k, i) => <Bar key={k} dataKey={k} fill={colors[i]} radius={[4, 4, 0, 0]} />)}
         </BarChart>
       </ResponsiveContainer>
@@ -119,7 +126,7 @@ function Demo() {
   const [tab, setTab] = useState<"clause" | "obl">("clause");
   const why = ["competes", "engage", "business"];
   const text = "Neither party shall, during the term and for two years after, engage in any business that competes with the other party.";
-  const tabCls = (on: boolean) => `rounded-md px-4 py-2 text-sm font-semibold transition ${on ? "bg-navy text-navy-foreground" : "text-navy hover:bg-secondary"}`;
+  const tabCls = (on: boolean) => `rounded-md px-4 py-2 text-sm font-semibold transition ${on ? "bg-brand text-brand-foreground" : "text-muted-foreground hover:bg-secondary hover:text-ink"}`;
   return (
     <div className="rounded-xl border bg-card p-6 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -127,19 +134,19 @@ function Demo() {
           <button className={tabCls(tab === "clause")} onClick={() => setTab("clause")}>Single clause</button>
           <button className={tabCls(tab === "obl")} onClick={() => setTab("obl")}>Obligations</button>
         </div>
-        <span className="rounded-full border-2 border-risk-med bg-risk-med/15 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-navy">
+        <span className="rounded-full border-2 border-risk-med/70 bg-risk-med/15 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink">
           Sample output (static illustration, not live)
         </span>
       </div>
       {tab === "clause" ? (
         <div className="mt-6 space-y-5">
-          <p className="rounded-lg bg-secondary p-5 font-serif text-lg leading-relaxed text-navy">
+          <p className="rounded-lg bg-secondary p-5 font-serif text-lg leading-relaxed text-ink">
             {text.split(/(\s+)/).map((w, i) =>
               why.some((k) => w.toLowerCase().startsWith(k)) ? <mark key={i} className="rounded bg-teal-soft px-1 font-semibold text-teal">{w}</mark> : w,
             )}
           </p>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div><p className="text-xs uppercase text-muted-foreground">Clause type</p><p className="mt-1 font-semibold text-navy">Non-Compete</p></div>
+            <div><p className="text-xs uppercase text-muted-foreground">Clause type</p><p className="mt-1 font-semibold text-ink">Non-Compete</p></div>
             <div><p className="text-xs uppercase text-muted-foreground">Risk tier</p><div className="mt-1"><Tier t="High" /></div></div>
             <div><p className="text-xs uppercase text-muted-foreground">Why (key words)</p><p className="mt-1 font-semibold text-teal">{why.join(", ")}</p></div>
           </div>
@@ -156,7 +163,7 @@ function Demo() {
                 ["The Customer shall pay all invoices within thirty (30) days of receipt.", "OBLIGATION", "Customer", "within thirty (30) days", "—"],
                 ["The Licensor may audit the Licensee's records once per year.", "RIGHT", "Licensor", "—", "—"],
               ].map((r) => (
-                <tr key={r[0]}>{r.map((c, i) => <td key={i} className={`py-3 pr-4 ${i === 1 ? "font-semibold text-teal" : "text-navy"}`}>{c}</td>)}</tr>
+                <tr key={r[0]}>{r.map((c, i) => <td key={i} className={`py-3 pr-4 ${i === 1 ? "font-semibold text-teal" : "text-ink"}`}>{c}</td>)}</tr>
               ))}
             </tbody>
           </table>
@@ -168,24 +175,34 @@ function Demo() {
   );
 }
 
+function Wordmark({ size }: { size: "nav" | "hero" }) {
+  const cls = size === "nav" ? "font-serif text-lg font-bold" : "font-serif font-bold";
+  return (
+    <span className={cls}>
+      <span className="text-navy-foreground">Contract</span>
+      <span className="text-teal">Guard</span>
+    </span>
+  );
+}
+
 function Index() {
   return (
     <div className="font-sans text-foreground">
-      <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b bg-background/85 backdrop-blur">
         <nav className="mx-auto flex max-w-6xl items-center gap-6 overflow-x-auto px-6 py-4">
-          <a href="#top" className="shrink-0 font-serif text-lg font-bold text-navy">Contract<span className="text-teal">Guard</span></a>
+          <a href="#top" className="shrink-0"><Wordmark size="nav" /></a>
           <div className="ml-auto flex gap-4 text-sm text-muted-foreground">
             {NAV.map(([id, l]) => <a key={id} href={`#${id}`} className="shrink-0 hover:text-teal">{l}</a>)}
           </div>
         </nav>
       </header>
 
-      <section id="top" className="bg-navy text-navy-foreground">
+      <section id="top" className="hero-glow bg-navy text-navy-foreground">
         <div className="mx-auto max-w-6xl px-6 py-28 md:py-36">
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-teal">NLP · Legal-tech prototype</p>
-          <h1 className="mt-4 text-5xl font-bold md:text-7xl">ContractGuard</h1>
+          <h1 className="mt-4 text-5xl md:text-7xl"><Wordmark size="hero" /></h1>
           <p className="mt-6 max-w-2xl text-xl md:text-2xl">Spot risky contract clauses and track obligations before you sign.</p>
-          <p className="mt-4 max-w-2xl text-navy-foreground/70">An educational NLP prototype trained on 510 real commercial contracts (CUAD v1). Not legal advice.</p>
+          <p className="mt-4 max-w-2xl text-navy-foreground/75">An educational NLP prototype trained on 510 real commercial contracts (CUAD v1). Not legal advice.</p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Ext href={APP} className={btnPrimary}>Open live app</Ext>
             <Ext href={REPO} className={btnGhost}>View on GitHub</Ext>
@@ -215,8 +232,8 @@ function Index() {
         <ol className="grid gap-4 md:grid-cols-4">
           {["CUAD contracts", "Clause extraction and Neutral chunks", "TF-IDF (word 1–2 grams) + Logistic Regression", "Streamlit app with risk tiers and rule-based obligation engine"].map((s, i) => (
             <li key={s} className="relative rounded-xl border bg-card p-5 shadow-sm">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal text-sm font-bold text-navy-foreground">{i + 1}</span>
-              <p className="mt-3 text-sm font-medium text-navy">{s}</p>
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-bold text-brand-foreground">{i + 1}</span>
+              <p className="mt-3 text-sm font-medium text-ink">{s}</p>
               {i < 3 && <span className="absolute -right-3 top-1/2 hidden -translate-y-1/2 text-xl text-teal md:block">→</span>}
             </li>
           ))}
@@ -234,7 +251,7 @@ function Index() {
           ] as const).map(([t, items]) => (
             <div key={t} className="flex flex-col gap-3 border-b p-5 last:border-0 md:flex-row md:items-center">
               <div className="w-40 shrink-0"><Tier t={t} /></div>
-              <div className="flex flex-wrap gap-2">{items.map((x) => <span key={x} className="rounded-md bg-secondary px-3 py-1 text-sm text-navy">{x}</span>)}</div>
+              <div className="flex flex-wrap gap-2">{items.map((x) => <span key={x} className="rounded-md bg-secondary px-3 py-1 text-sm text-ink">{x}</span>)}</div>
             </div>
           ))}
         </div>
@@ -246,10 +263,10 @@ function Index() {
         <div className="grid gap-6 lg:grid-cols-2">
           <ChartBox title="Model comparison" data={models} keys={["Accuracy", "Macro-F1"]} />
           <div className="rounded-xl border bg-card p-6 shadow-sm">
-            <h3 className="text-base font-semibold text-navy">High-risk tier (Logistic Regression)</h3>
+            <h3 className="text-base font-semibold text-ink">High-risk tier (Logistic Regression)</h3>
             <div className="mt-6 grid grid-cols-3 gap-4 text-center">
               {[["Precision", "0.846"], ["Recall", "0.795"], ["F1", "0.82"]].map(([k, v]) => (
-                <div key={k} className="rounded-lg bg-teal-soft p-5"><p className="font-serif text-3xl font-bold text-navy">{v}</p><p className="mt-1 text-xs uppercase text-muted-foreground">{k}</p></div>
+                <div key={k} className="rounded-lg bg-teal-soft p-5"><p className="font-serif text-3xl font-bold text-ink">{v}</p><p className="mt-1 text-xs uppercase text-muted-foreground">{k}</p></div>
               ))}
             </div>
             <p className="mt-6 text-xs text-muted-foreground">Results from a single run (seed 42).</p>
@@ -257,8 +274,8 @@ function Index() {
           <ChartBox title="Audit by clause length (words)" data={byLength} keys={["Accuracy", "Macro-F1", "High-risk recall"]} />
           <ChartBox title="Audit by contract type" data={byType} keys={["Accuracy", "Macro-F1", "High-risk recall"]} />
         </div>
-        <div className="mt-8 rounded-xl border-2 border-navy bg-card p-6">
-          <h3 className="text-lg font-semibold text-navy">Honest reading</h3>
+        <div className="mt-8 rounded-xl border-2 border-teal/50 bg-card p-6">
+          <h3 className="text-lg font-semibold text-ink">Honest reading</h3>
           <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
             <li>Long clauses score about 7 points lower in accuracy.</li>
             <li>Distribution contracts are the weakest subgroup.</li>
@@ -274,13 +291,13 @@ function Index() {
         <div className="grid gap-6 lg:grid-cols-3">
           {coefs.map((c) => (
             <div key={c.cls} className="rounded-xl border bg-card p-5 shadow-sm">
-              <h3 className="mb-3 text-base font-semibold text-navy">{c.cls}</h3>
+              <h3 className="mb-3 text-base font-semibold text-ink">{c.cls}</h3>
               <ResponsiveContainer width="100%" height={180}>
                 <BarChart data={c.data} layout="vertical" margin={{ left: 20 }}>
-                  <XAxis type="number" domain={[0, 8]} tick={{ fontSize: 11 }} />
-                  <YAxis type="category" dataKey="term" tick={{ fontSize: 11 }} width={90} />
-                  <Tooltip />
-                  <Bar dataKey="w" name="Coefficient" fill={C.teal} radius={[0, 4, 4, 0]} />
+                  <XAxis type="number" domain={[0, 8]} tick={axisTick} stroke="var(--border)" tickLine={false} />
+                  <YAxis type="category" dataKey="term" tick={axisTick} width={90} stroke="var(--border)" tickLine={false} axisLine={false} />
+                  <Tooltip {...tooltipStyle} cursor={{ fill: "var(--teal-soft)" }} />
+                  <Bar dataKey="w" name="Coefficient" fill={C.c1} radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -299,7 +316,7 @@ function Index() {
             "Subgroup sizes are small.",
             "Educational prototype, not legal advice.",
             "Never upload confidential contracts to a public demo.",
-          ].map((l) => <li key={l} className="flex gap-3 rounded-lg bg-card p-4 text-sm text-navy shadow-sm"><span className="text-teal">●</span>{l}</li>)}
+          ].map((l) => <li key={l} className="flex gap-3 rounded-lg bg-card p-4 text-sm text-ink shadow-sm"><span className="text-teal">●</span>{l}</li>)}
         </ul>
       </Section>
 
@@ -308,8 +325,8 @@ function Index() {
         <div className="grid gap-6 md:grid-cols-3">
           {([["Aarav Seth", "Team Leader · data, model, repo"], ["Aryan Bakshi", "Audit, explainability, error analysis"], ["Rudranil Ghosh", "App, pitch, report"]] as const).map(([n, r]) => (
             <div key={n} className="rounded-xl border bg-card p-6 text-center shadow-sm">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-navy font-serif text-xl font-bold text-navy-foreground">{n.split(" ").map((x) => x[0]).join("")}</div>
-              <h3 className="mt-4 text-lg font-semibold text-navy">{n}</h3>
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand font-serif text-xl font-bold text-brand-foreground">{n.split(" ").map((x) => x[0]).join("")}</div>
+              <h3 className="mt-4 text-lg font-semibold text-ink">{n}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{r}</p>
             </div>
           ))}
@@ -326,7 +343,7 @@ function Index() {
             ["ContractGuard project repo", REPO],
           ] as const).map(([l, h]) => (
             <li key={h} className="rounded-lg bg-card p-4 shadow-sm">
-              <p className="font-medium text-navy">{l}</p>
+              <p className="font-medium text-ink">{l}</p>
               <Ext href={h} className="break-all text-teal hover:underline">{h}</Ext>
             </li>
           ))}
