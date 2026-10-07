@@ -27,7 +27,7 @@ const REPO = "https://github.com/rudranilghosh11/contractguard";
 const NAV = [
   ["problem", "Problem"], ["features", "Features"], ["how", "How it works"], ["tiers", "Risk tiers"],
   ["demo", "Demo"], ["results", "Results"], ["explain", "Explainability"], ["limits", "Limitations"],
-  ["team", "Team"], ["refs", "References"],
+  ["refs", "References"],
 ] as const;
 
 const C = { c1: "var(--chart-1)", c2: "var(--chart-2)", c3: "var(--chart-3)" };
@@ -320,20 +320,8 @@ function Index() {
         </ul>
       </Section>
 
-      <Section id="team" eyebrow="09 · Team" title="Team NLP-44">
-        <p className="-mt-6 mb-8 text-muted-foreground">Team NLP-44, BBA(AI), Natural Language Processing CA3</p>
-        <div className="grid gap-6 md:grid-cols-3">
-          {([["Aarav Seth", "Team Leader · data, model, repo"], ["Aryan Bakshi", "Audit, explainability, error analysis"], ["Rudranil Ghosh", "App, pitch, report"]] as const).map(([n, r]) => (
-            <div key={n} className="rounded-xl border bg-card p-6 text-center shadow-sm">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand font-serif text-xl font-bold text-brand-foreground">{n.split(" ").map((x) => x[0]).join("")}</div>
-              <h3 className="mt-4 text-lg font-semibold text-ink">{n}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{r}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
 
-      <Section id="refs" eyebrow="10 · References" title="Data and links" alt>
+      <Section id="refs" eyebrow="09 · References" title="Data and links" alt>
         <ul className="space-y-3 text-sm">
           {([
             ["CUAD v1 — The Atticus Project (Hendrycks et al. 2021, CC BY 4.0)", "https://www.atticusprojectai.org/cuad"],
